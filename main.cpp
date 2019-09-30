@@ -1,91 +1,69 @@
-#include "mbed.h"
-
-// globals
-
-
-const char common = 'a';	// establish common anode logic
-
-
-bool decPt = true; // decimal point display flag
-	
-int main() {
-	
-	DigitalIn data(p30,PullUp);	// wire to data pin
+#include"mbed.h" 
  
-	DigitalIn reset(p28,PullUp); // wire to reset pin
-
-	DigitalIn clk(p27,PullUp); // wire to clock	
-	
-}
-void loop(){
-// loop to control character data
-for (int i = 0; i <= 15; i++){
-    
-	}
-}
-// alternate display of decimal point
-
-// function to convert numbers to bits 
-int myfuncNumbToBits(int number){
-	switch(number){
-		case 0:
-			return 11111100;
-		break;
-		case 1:
-			return 01100000;
-		break;
-		case 2:
-			return 11011010;
-		break;
-		case 3:
-			return 11110010;
-		break;
-		case 4:
-			return 01100110;
-		break;
-		case 5:
-			return 10110110;
-		break;
-		case 6:
-			return 10111110;
-		break;
-		case 7:
-			return 11100000;
-		break;
-		case 8:
-			return 11111110;
-		break;
-		case 9:
-			return 11110110;
-		break;
-		case 10:
-			return 11101110;
-		break;
-		case 11:
-			return 00111110;
-		break;
-		case 12:
-			return 10011100;
-		break;
-		case 13:
-			return 01111010;
-		break;
-		case 14:
-			return 10011110;
-		break;
-		case 15:
-			return 10001110;
-		break;
-		default:
-			return 10010010; // error condition
-		break;
-	}
-}
-
-void myDisplayFunction(int eightBits){
-	if(common == 'a'){
-		// XOR all bits
-		eightBits = eightBits ^ 1111111; 
-	}
-}
-
+DigitalOut clk(p27);  
+DigitalOut rst(p28);  
+DigitalOut data(p30); 
+ 
+void EdgeClock(){ 
+ wait(0.000001); 
+ clk = 1; 
+ wait(0.000001); 
+ clk=0; 
+  
+} 
+int main(){ 
+ rst = 0; 
+ EdgeClock(); 
+ rst = 1; 
+ EdgeClock(); 
+  
+ int arr[10][8] = {  {1,1,0,0,0,0,0,0}, //0 
+      {1,1,1,1,1,0,0,1}, //1 
+      {1,0,1,0,0,1,0,0}, //2 
+      {1,0,1,1,0,0,0,0}, //3 
+      {1,0,0,1,1,0,0,1}, //4 
+      {1,0,0,1,0,0,1,0}, //5 
+      {1,0,0,0,0,0,1,0}, //6 
+      {1,1,1,1,1,0,0,0}, //7 
+      {1,0,0,0,0,0,0,0}, //8 
+      {1,0,0,1,1,0,0,0}}; //9 
+      //{0,1,1,1,1,1,1,1}}; //dot 
+  
+ int dot[2][8] =  {{0,1,1,1,1,1,1,1}, //dot ON 
+      {1,1,1,1,1,1,1,1}}; //dot OFF 
+        
+ 
+while(1){ 
+ for (int a = 0; a < 10; a++){ 
+  for(int i = 0; i < 10; i++){ 
+   for (int j = 0; j < 8 ; j++) { 
+     data = arr[i][j]; 
+     EdgeClock(); 
+    } 
+     
+    for (int j = 0; j < 8 ; j++) { 
+     data = arr[a][j]; 
+     EdgeClock(); 
+    }   
+    wait(0.1); 
+   }// end for 
+ } 
+//Blink dots protocal 
+for (int a = 1; a >= 0 ; a--){   
+ for (int b = 0; b < 8; b++){ 
+    data = dot[a][b]; 
+    EdgeClock(); 
+    } 
+   } 
+  wait(0.5); 
+for (int a = 0; a < 2 ; a++){   
+ for (int b = 0; b < 8; b++){ 
+    data = dot[a][b]; 
+    EdgeClock(); 
+    } 
+   } 
+  wait(0.5); 
+}//end while 
+           
+ 
+}//end main
