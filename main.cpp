@@ -1,10 +1,10 @@
 #include"mbed.h" 
  
-DigitalOut clk(p27);  
-DigitalOut rst(p28);  
-DigitalOut data(p30); 
+DigitalOut clk(p27);  //Clock pin
+DigitalOut rst(p28);  //Reset|Clear pin
+DigitalOut data(p30); //Data pin
  
-void EdgeClock(){ 
+void EdgeClock(){ //Setting function for Clock
  wait(0.000001); 
  clk = 1; 
  wait(0.000001); 
@@ -12,12 +12,18 @@ void EdgeClock(){
   
 } 
 int main(){ 
- rst = 0; 
- EdgeClock(); 
- rst = 1; 
- EdgeClock(); 
+ rst = 0; //Reset is set to 0, ready to take data
+ EdgeClock(); //Clock sequence 
+ rst = 1; //reset
+ EdgeClock(); //Clock sequence
   
- int arr[10][8] = {  {1,1,0,0,0,0,0,0}, //0 
+ 
+ //We are using negative logic!!
+ int arr[10][8] = {  
+  
+    //{D,g,f,e,d,c,b,a} 
+  
+      {1,1,0,0,0,0,0,0}, //0 
       {1,1,1,1,1,0,0,1}, //1 
       {1,0,1,0,0,1,0,0}, //2 
       {1,0,1,1,0,0,0,0}, //3 
@@ -29,10 +35,11 @@ int main(){
       {1,0,0,1,1,0,0,0}}; //9 
       //{0,1,1,1,1,1,1,1}}; //dot 
   
+ //We are displaying the decimal last
  int dot[2][8] =  {{0,1,1,1,1,1,1,1}, //dot ON 
       {1,1,1,1,1,1,1,1}}; //dot OFF 
         
- 
+ //Execute while logic=1
 while(1){ 
  for (int a = 0; a < 10; a++){ 
   for(int i = 0; i < 10; i++){ 
