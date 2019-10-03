@@ -4,7 +4,7 @@ DigitalOut clk(p27);  //Clock pin
 DigitalOut rst(p28);  //Reset|Clear pin
 DigitalOut data(p30); //Data pin
  
-void EdgeClock(){ //Setting function for Clock
+void EdgeClock(){ // This is the function where we sync the clock with data
  wait(0.000001); 
  clk = 1; 
  wait(0.000001); 
@@ -41,9 +41,11 @@ int main(){
         
  //Execute while logic=1
 while(1){ 
- for (int a = 0; a < 10; a++){ 
-  for(int i = 0; i < 10; i++){ 
-   for (int j = 0; j < 8 ; j++) { 
+ for (int a = 0; a < 10; a++){ //Loop going through the rows
+
+  for(int i = 0; i < 10; i++){ //Loop going through columns
+
+   for (int j = 0; j < 8 ; j++) { //Here is we add data to grid
      data = arr[i][j]; 
      EdgeClock(); 
     } 
