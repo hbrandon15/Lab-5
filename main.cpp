@@ -1,10 +1,10 @@
 #include"mbed.h" 
  
-DigitalOut clk(p27);  //Clock pin
+DigitalOut clk(p27);  //clock pin
 DigitalOut rst(p28);  //Reset|Clear pin
 DigitalOut data(p30); //Data pin
  
-void EdgeClock(){ // This is the function where we sync the clock with data
+void EdgeClock(){ //This is the function where we sync the clock with data
  wait(0.000001); 
  clk = 1; 
  wait(0.000001); 
@@ -13,17 +13,15 @@ void EdgeClock(){ // This is the function where we sync the clock with data
 } 
 int main(){ 
  rst = 0; //Reset is set to 0, ready to take data
- EdgeClock(); //Clock sequence 
+ EdgeClock(); //Clock sequence
  rst = 1; //reset
  EdgeClock(); //Clock sequence
   
- 
- //We are using negative logic!!
- int arr[10][8] = {  
-  
-    //{D,g,f,e,d,c,b,a} 
-  
-      {1,1,0,0,0,0,0,0}, //0 
+// We are using negative logic!	
+	
+	// segment labels: {d,g,f,e,d,c,b,a}
+			int arr[16][8] = {  
+			{1,1,0,0,0,0,0,0}, //0 
       {1,1,1,1,1,0,0,1}, //1 
       {1,0,1,0,0,1,0,0}, //2 
       {1,0,1,1,0,0,0,0}, //3 
@@ -32,20 +30,25 @@ int main(){
       {1,0,0,0,0,0,1,0}, //6 
       {1,1,1,1,1,0,0,0}, //7 
       {1,0,0,0,0,0,0,0}, //8 
-      {1,0,0,1,1,0,0,0}}; //9 
+      {1,0,0,1,1,0,0,0}, //9
+			{1,0,0,0,1,0,0,0}, //A
+ 			{1,0,0,0,0,0,1,1}, //B
+			{1,1,0,0,0,1,1,0}, //C
+			{1,0,1,0,0,0,0,1}, //D
+			{1,0,0,0,0,1,1,0}, //E
+			{1,0,0,0,1,1,1,0}}; //F
+			
       //{0,1,1,1,1,1,1,1}}; //dot 
-  
- //We are displaying the decimal last
+			
+ // We are displaying the decimal point last
  int dot[2][8] =  {{0,1,1,1,1,1,1,1}, //dot ON 
       {1,1,1,1,1,1,1,1}}; //dot OFF 
         
- //Execute while logic=1
+// Execute while logic=1
 while(1){ 
- for (int a = 0; a < 10; a++){ //Loop going through the rows
-
-  for(int i = 0; i < 10; i++){ //Loop going through columns
-
-   for (int j = 0; j < 8 ; j++) { //Here is we add data to grid
+ for (int a = 0; a < 16; a++){ //Loop going through the rows
+  for(int i = 0; i < 16; i++){ //Loop going through columns
+   for (int j = 0; j < 8 ; j++) { //Here we add data to grid
      data = arr[i][j]; 
      EdgeClock(); 
     } 
@@ -54,7 +57,7 @@ while(1){
      data = arr[a][j]; 
      EdgeClock(); 
     }   
-    wait(0.1); 
+    wait(0.05); 
    }// end for 
  } 
 //Blink dots protocal 
@@ -64,14 +67,14 @@ for (int a = 1; a >= 0 ; a--){
     EdgeClock(); 
     } 
    } 
-  wait(0.5); 
+  wait(0.25); 
 for (int a = 0; a < 2 ; a++){   
  for (int b = 0; b < 8; b++){ 
     data = dot[a][b]; 
     EdgeClock(); 
     } 
    } 
-  wait(0.5); 
+  wait(0.25); 
 }//end while 
            
  
